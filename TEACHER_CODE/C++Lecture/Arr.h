@@ -59,18 +59,7 @@ void Arr<T>::push_back(const T& _Data)
 		// 데이터가 이미 여러개 입력 되어있는 경우
 		else
 		{
-			T* pNew = new T[m_Capacity * 2];
-
-			for (int i = 0; i < m_Size; ++i)
-			{
-				pNew[i] = m_Data[i];
-			}
-
-			delete[] m_Data;
-
-			m_Data = pNew;
-
-			m_Capacity *= 2;
+			reserve(m_Capacity * 2);
 		}
 	}
 
@@ -91,12 +80,34 @@ T& Arr<T>::operator[](int _Index)
 
 template<typename T>
 void Arr<T>::reserve(int _Size)
-{
+{	
+	// 이미 보유한 데이터 개수보다도 적은 숫자로 공간 예약을 하려고 하면 무시한다.
+	if (_Size <= m_Size)
+	{
+		return;
+	}
 
+	T* pNew = new T[_Size];
+
+	for (int i = 0; i < m_Size; ++i)
+	{
+		pNew[i] = m_Data[i];
+	}
+
+	delete[] m_Data;
+
+	m_Data = pNew;
+
+	m_Capacity = _Size;
 }
 
 template<typename T>
 void Arr<T>::resize(int _Size)
 {
+	if (m_Capacity < _Size)
+	{
+		reserve(_Size);
+	}	
 
+	m_Size = _Size;
 }
