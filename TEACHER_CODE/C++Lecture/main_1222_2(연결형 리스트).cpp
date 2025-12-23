@@ -8,6 +8,19 @@
 
 using namespace std;
 
+
+class MyClass
+{
+private:
+	int m_i;
+
+public:
+	MyClass()
+		:m_i(0)
+	{}
+};
+
+
 int main()
 {
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
@@ -43,7 +56,14 @@ int main()
 	}
 	vecInt.reserve(50);
 
+	//MyClass* pMy = new MyClass;
 
+	MyClass* pMy = (MyClass*)malloc(sizeof(MyClass));
+	//pMy->MyClass::MyClass();
+	*pMy = MyClass();
+
+	int* pInt = (int*)malloc(sizeof(int));
+	*pInt = int();
 
 	return 0;
 }

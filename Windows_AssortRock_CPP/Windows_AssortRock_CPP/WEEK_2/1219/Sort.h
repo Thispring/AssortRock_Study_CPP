@@ -31,46 +31,54 @@ void SelectionSort(int(&Arr)[Size])
 template<int Size>
 void InsertionSort(int(&Arr)[Size])
 {	
-	// 삽입 후, 뒤에 있는 값을 몇번 정렬할지 저장하는 변수
-	int sortCount = 0;
+	int insertCount = 0;
 	for (int i = 1; i < Size; i++)
 	{
 		for (int j = 0; j < Size; j++)
 		{
-			// j가 더 큰 경우, i번째 있는 숫자가 가장 작은 값이므로
-			// j위치가 삽입점이 됨
-			if (j == i)	// j가 i보다 클때는 검사 X
-				break;
-			if (Arr[j] >= Arr[i])
+			// j는 i가 되기 전까지만 검사
+			if (j == i)
 			{
-				// Arr[j]는 Arr[i]기준으로 가장 큰 값
-				int tempMax = Arr[j];
-				
-				int sortCount = 0;
-				// 0부터 i까지의 몇개의 배열이 존재하는지 검사
-				for (int k = 0; k < i; k++)
-				{
-					sortCount++;
-				}
-				// sortCount가 0이 아니라면 0부터 i까지 이미 배열이 있으므로
-				// 남은 배열을 서로 순회하면서 큰 값이 있다면 마지막 자리에 정렬하기
-				while (sortCount != 0)
-				{
-					// Arr[sortCount], Arr[sortCount -1]... 식으로 정렬하기
-					if (Arr[sortCount] <= Arr[sortCount - 1])
-					{
-						// sortCount - 1이 크면 sortCount자리로 옮겨야함
-						int tempMin = Arr[sortCount - 1];
-						Arr[sortCount - 1] = Arr[sortCount];
-						Arr[sortCount] = tempMin;
-					}
-					sortCount--;
-				}
+				break;
 			}
-			
+
+			if (Arr[j] > Arr[i])
+			{
+				// j가 아직 i까지 전부 순회하지 않았다면
+				if (i != 1 && insertCount != 0)	// i가 1이라면 (초반) 검사 생략
+				{
+					int temp = Arr[i];
+					// 삽입점(j) 기준으로 뒤에 있는 배열 요소들을 n칸씩 밀기
+					int move = 0;	// 배열 이동을 위한 임시 인덱스 변수
+					while (insertCount != 0)
+					{
+						// inserCount만큼 i번째 위치에 i이전 위치에 있는 값을 옮기고
+						// i이전 위치에는 i - 2 위치에 있는 값을 옮기는 식의 반복
+						Arr[i - move] = Arr[i - (1 - move)];
+						insertCount--;
+						move++;
+						continue;
+						//Arr[i - 1] = Arr[i - 2];
+						//Arr[i - 2] = Arr[i - 3];	// 이런식으로 반복해야함
+						//// 몇개를 옮겨야할지는 inserCount와 i사이에 몇개의 배열이 존재하는지 확인
+					}
+					// 반복이 끝나고 임시로 저장한 Arr[i]값을 비워진 Arr[j]위치에 넣기
+					Arr[j] = Arr[i];
+					break;
+				}
+
+				// 첫 for문 기준 j는 0에서 해당 조건이 걸리기 때문에
+				// j자리는 0
+				int temp = Arr[i];
+				Arr[i] = Arr[j];
+				Arr[j] = temp;
+				break;
+			}
+			insertCount++;
 		}
-		sortCount = 0;
+		insertCount = 0;
 	}
+
 }
 
 template<int Size>

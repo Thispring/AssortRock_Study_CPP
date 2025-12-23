@@ -1,5 +1,7 @@
 #pragma once
 
+#include <assert.h>
+
 template<typename T>
 class Arr
 {
@@ -20,10 +22,73 @@ public:
 	// 미리 m_Size 를 확보해둔다.
 	void resize(int _Size);
 
+	class iterator;
+	iterator begin()
+	{
+		return iterator(this, 0); // 이름없는 객체
+	}
+
+	iterator end()
+	{		
+		return iterator(this, -1); // 이름없는 객체
+	}
+
 
 public:
 	Arr();
 	~Arr();
+
+public:
+	class iterator
+	{
+	private:
+		Arr<T>* m_Owner;
+		int		m_Idx;   // m_Owner 가 nullptr 이 아니면서, m_Idx 이 -1, 마지막의 다음(end) 를 가리키는 상황
+
+	public:
+		T& operator*()
+		{
+			// iterator 가 데이터를 보유하고 있는 컨테이너를 알고있어야 하고,
+			// index 가 -1 이 아니어야 한다.
+			assert(nullptr != m_Owner && m_Idx != -1);
+
+			return m_Owner->m_Data[m_Idx];
+		}
+
+		void operator++()
+		{
+			assert(-1 != m_Idx);
+			
+			++m_Idx;
+
+			if (m_Owner->m_Size <= m_Idx)
+			{
+				m_Idx = -1;
+			}			
+		}
+
+		void operator++(int _Num)
+		{
+
+		}
+
+	public:
+		iterator()
+			: m_Owner(nullptr)
+			, m_Idx(-1)
+		{
+		}
+
+		iterator(Arr<T>* _Owner, int _Idx)
+			: m_Owner(_Owner)
+			, m_Idx(_Idx)
+		{
+		}
+
+		~iterator()
+		{
+		}
+	};
 };
 
 template<typename T>
