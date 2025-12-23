@@ -2,5 +2,6 @@
 * text=auto
 CPP_POKER/** filter=lfs diff=lfs merge=lfs -text
 Windows_AssortRock_CPP/** filter=lfs diff=lfs merge=lfs -text
+TEACHER_CODE/** filter=lfs diff=lfs merge=lfs -text
 *.cpp !text !filter !merge !diff
 *.h !text !filter !merge !diff
