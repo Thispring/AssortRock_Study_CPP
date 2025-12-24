@@ -116,6 +116,7 @@ int main()
 	printM.PrintAction("Dealer");
 
 	player.SetCard();
+	player.ShowHandsInfo();
 
 	printM.PrintSelectArray(isSelectHand);
 	printM.PrintSelectCardBorad(pSelectCard, selectCardIdx);

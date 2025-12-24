@@ -74,6 +74,57 @@ int main()
 		// 에러: lvalue required as increment operand
 	}
 
+	{
+		DynamicArr<int> myArr;
+		myArr.push_back(10);
+		myArr.push_back(20);
+		myArr.push_back(30);
+
+		DynamicArr<int> otherArr;
+		otherArr.push_back(40);
+		otherArr.push_back(50);
+		otherArr.push_back(60);
+
+		myArr.swap(otherArr);
+
+		for (int i = 0; i < 3; i++)
+		{
+			std::cout << myArr[i] << " ";
+		}
+		std::cout << std::endl;
+
+		for (int i = 0; i < 3; i++)
+		{
+			std::cout << otherArr[i] << " ";
+		}
+		std::cout << std::endl;
+
+		int a = 0;
+	}
+
+	{
+		DynamicArr<int> myArr;
+		myArr.push_back(10);
+		myArr.push_back(20);
+		myArr.push_back(30);
+
+		DynamicArr<int> otherArr;
+
+		otherArr = myArr;
+		
+		int a = 0;
+	}
+
+	{
+		DynamicArr<int> myArr;
+		myArr.push_back(10);
+		myArr.push_back(20);
+		myArr.push_back(30);
+
+		DynamicArr<int> otherArr(myArr);
+
+		int a = 0;
+	}
 
 
 	return 0;

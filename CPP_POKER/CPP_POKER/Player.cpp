@@ -47,6 +47,7 @@ void Player::SetCard() {
 
 // hands의 시작주소를 리턴하여 접근하게 하는 함수
 int* Player::GetHands() {
+	// 레퍼런스는 타입이 일치해야하기 때문에 [대괄호]에 반환할 배열 크기를 알려주어야함
 	return hands;
 }
 
@@ -208,7 +209,15 @@ void Player::ReturnSelectCard(int curIndex) {
 
 // selectCards를 읽어와, 알맞은 포커족보를 반환하는 함수
 // TODO: 역할을 다시 고려해보고 PokerCard의 함수로 옮기기
-void Player::PokerChecker() {
+void Player::PokerChecker(bool isCheck) {
+	// 만약 main에서 isCheck가 true가 되지 않았다면
+	// 검사 조건이 불충분한데 함수가 호출된것이므로 경고 메시지 출력
+	if (!isCheck)
+	{
+		std::cout << "Not Poker Check Condition" << std::endl;
+		return;
+	}
+
 	// selectCards 배열에 값이 5개가 모두 있는지 검사
 	for (int i = 0; i < SELECT_CARD_LIMIT; i++)
 	{

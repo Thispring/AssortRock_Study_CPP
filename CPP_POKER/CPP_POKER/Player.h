@@ -61,5 +61,5 @@ public:
 	void ReturnSelectCard(int curIndex);
 
 	// selectCards를 읽어와, 알맞은 포커족보를 반환하는 함수
-	void PokerChecker();
+	void PokerChecker(bool isCheck);
 };

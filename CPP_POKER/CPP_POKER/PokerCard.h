@@ -3,6 +3,7 @@
 #pragma once
 // 사용자 정의 헤더
 #include "Card.h"
+#include "Player.h"
 
 // 이 게임에서 사용할 포커 족보
 // High Card
@@ -23,7 +24,10 @@ class PokerCard : Card {
 protected:
 	enum HandRank
 	{
-		HIGH_CARD = 1, ONE_PAIR = 1, TWO_PAIRS = 1, THREE_OF_A_KIND = 1,
-		STRAIGHT = 1, FLUSH = 1, FULL_HOUSE = 1, FOUR_OF_A_KIND = 1, STRAIGHT_FLUSH = 1
-	};
+		HIGH_CARD , ONE_PAIR , TWO_PAIRS , THREE_OF_A_KIND ,
+		STRAIGHT , FLUSH , FULL_HOUSE , FOUR_OF_A_KIND , STRAIGHT_FLUSH 
+	} typedef HAND_RANK;
+public:
+	void PokerCheck(int* _selectCard, bool isCheck);
+	int ReturnRank();
 };

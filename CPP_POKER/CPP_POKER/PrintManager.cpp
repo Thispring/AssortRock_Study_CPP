@@ -120,7 +120,7 @@ void PrintManager::PrintCardBorad(int* pHand, int pointerColor) {
 
 // Player의 선택한 카드들을 출력하는 함수
 void PrintManager::PrintSelectCardBorad(int* pSelectCard, int pointerColor) {
-	// Player의 selectCards 배열을 받아 정보를 출력
+	// Player의 selectCards 배열을 받아 정보 출력
 	// Card 정보를 받아와 문자열로 출력 변경
 	
 	PrintLine(45);
@@ -142,7 +142,7 @@ void PrintManager::PrintSelectCardBorad(int* pSelectCard, int pointerColor) {
 		else
 			std::cout << Color::RESET;
 
-		if (pSelectCard[i] == 0)
+		if ((pSelectCard + i) == 0)
 			std::cout << " [       ] ";
 		else
 		{

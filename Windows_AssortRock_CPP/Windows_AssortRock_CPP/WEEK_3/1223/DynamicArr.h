@@ -48,6 +48,15 @@ public:
 		return iterator(this, -1);	// -1 인덱스를 전달 
 	}
 
+	// ==========
+	// TODO 1224: 
+	// erase와 insert 함수 구현하기
+
+	// iterator 가 가리키는 요소를 삭제하고, 삭제한 데이터 다음 요소를 가리키는 iterator 를 만들어서 반환
+	iterator erase(const iterator& _iter);
+	// iterator 가 가리키는 지점에 데이터를 추가한다.
+	void insert(const iterator& _iter, const T& _data);
+
 public:
 	DynamicArr();
 	// ==========
@@ -64,11 +73,22 @@ public:
 public:
 	class iterator
 	{
+		friend class DynamicArr<T>;	// DynamicArr가 내부 클래스인 iterator의 접근을 허용하는 friend 선언
 	private:
 		// 절대위치가 아닌 상대위치를 활용한다는 개념으로 접근
 		DynamicArr<T>* mOwner;	
-		int mIdx;	// -1 마지막 다음(ebd) 를 가리키는 상황
+		int mIdx;	// -1 마지막 다음(end) 를 가리키는 상황
+
 	public:
+		// ==========
+		// TODO 1223:
+		// 비교 연산자 오버로딩
+		// =================
+		bool operator ==(const iterator& _Other)
+		{
+			return mOwner == _Other.mOwner;
+		}
+		
 		// * 연산자 오버로딩
 		T& operator*()
 		{
@@ -119,11 +139,14 @@ public:
 		iterator& operator--()
 		{
 			// 예외처리
-			assert(nullptr != mOwner && mIdx != -1);
+			assert(nullptr != mOwner && mIdx != 0);
 			
-			if (mIdx <= 0)
+			// end일때 예외처리, 마지막 데이터를 가리켜야한다.
+			if (mIdx == -1)
 			{
-				mIdx = -1;
+				// 데이터가 아예 없었을 때
+				assert(mOwner->m_Size != 0);
+				mIdx = mOwner->m_Size - 1;
 			}
 			else 
 			{
@@ -163,10 +186,15 @@ DynamicArr<T>::DynamicArr()
 {
 }
 
+// 복사 생성자
 template<typename T>
 DynamicArr<T>::DynamicArr(const DynamicArr<T>& _Other)
+	: m_Data(nullptr)
+	, m_Capacity(0)
+	, m_Size(0)
 {
-
+	// 이미 구현된 = 연산자 오버로딩 함수를 호출하여 값을 복사
+	(*this) = _Other;
 }
 
 template<typename T>
@@ -250,13 +278,78 @@ void DynamicArr<T>::resize(int _Size)
 template<typename T>
 void DynamicArr<T>::swap(DynamicArr<T>& _Other)
 {
+	// 호출자의 값을 백업해둘 Temp변수 선언
+	int Temp = m_Size;
+	m_Size = _Other.m_Size;
+	_Other.m_Size = Temp;
 
+	Temp = m_Capacity;
+	m_Capacity = _Other.m_Capacity;
+	_Other.m_Capacity = Temp;
+
+	// 포인터 pData를 교환하지 않으면?
+	// 값 교환이 이루어지지 않음
+	T* pData = m_Data;
+	m_Data = _Other.m_Data;
+	_Other.m_Data = pData;
 }
 
 template<typename T>
 DynamicArr<T>& DynamicArr<T>::operator=(const DynamicArr<T>& _Other)
 {
+	// 만약 호출자의 capacity가 인자로 받아온 객체의 capacity보다 작다면
+	// 인자로 받아온 객체의 크기만큼 공간 늘리기
+	if (m_Capacity < _Other.m_Capacity)
+	{
+		// reserve 함수를 이용, 매개변수 객체의 사이즈만큼
+		reserve(_Other.m_Size);
+	}
 
+	// 매개변수 객체의 현재 들고있는 데이터 크기만큼 반복
+	for (int i = 0; i < _Other.m_Size; i++)
+	{
+		m_Data[i] = _Other.m_Data[i];
+	}
+
+	// 사이즈도 동일하게 복사
+	m_Size = _Other.m_Size;
 
 	return *this;
+}
+
+template<typename T>
+typename DynamicArr<T>::iterator DynamicArr<T>::erase(const iterator& _iter)
+{
+
+}
+
+template<typename T>
+typename void DynamicArr<T>::insert(const iterator& _iter, const T& _data)
+{
+	// _iter와 this가 동일한지 확인
+	assert(this == _iter.mOwner);
+
+	// _iter가 가리키는 컨테이너의 Size와 Capacity를 비교해 빈 공간이 있는지 확인
+	if (m_Size >= m_Capacity)
+	{
+		// 이 조건에 걸린다면, 빈 공간이 없다는 뜻
+		reserve(m_Capacity * 2);
+	}
+	
+	// 컨테이너에 있는 데이터를 뒤로 한 칸씩 미는 로직
+	// 현재 몇번째 인덱스인지 확인하고, 인덱스 부터 Capacity까지 반복문을 통해
+	// 기존에 있던 데이터를 한 칸씩 뒤로 밀기
+	
+	int LoopIdx = m_Size - _iter.mIdx;
+
+	for (int i = 0; i < LoopIdx; i++)
+	{
+		m_Data[m_Size - i] = m_Data[m_Size - 1 - i];
+	}
+
+	// 뒤로 한 칸씩 모두 민 다음, 받아온 데이터를 현재 인덱스에 저장
+	m_Data[_iter.mIdx] = _data;
+	// 데이터 이동이 모두 성공하면 Size증가
+	++m_Size;
+	
 }
