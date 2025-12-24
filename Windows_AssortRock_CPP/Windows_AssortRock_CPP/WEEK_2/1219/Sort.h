@@ -1,4 +1,6 @@
 #pragma once
+#include <stdlib.h>
+
 // 선택 정렬
 template<int Size>
 void SelectionSort(int(&Arr)[Size])
@@ -31,7 +33,7 @@ void SelectionSort(int(&Arr)[Size])
 template<int Size>
 void InsertionSort(int(&Arr)[Size])
 {	
-	int insertCount = 0;
+	int insertNum = 0;
 	for (int i = 1; i < Size; i++)
 	{
 		for (int j = 0; j < Size; j++)
@@ -44,41 +46,46 @@ void InsertionSort(int(&Arr)[Size])
 
 			if (Arr[j] > Arr[i])
 			{
+				int temp = Arr[i];
 				// j가 아직 i까지 전부 순회하지 않았다면
-				if (i != 1 && insertCount != 0)	// i가 1이라면 (초반) 검사 생략
+				if (i != 1)	// i가 1이라면 (초반) 검사 생략
 				{
-					int temp = Arr[i];
-					// 삽입점(j) 기준으로 뒤에 있는 배열 요소들을 n칸씩 밀기
-					int move = 0;	// 배열 이동을 위한 임시 인덱스 변수
-					while (insertCount != 0)
+					int Idx = j;	// 동적배열을 사용할 임시 인덱스 변수
+					if (i > j)
+						insertNum = i - j;
+					else
+						insertNum = j - i;
+
+					int* pTemp = (int*)malloc(sizeof(int) * insertNum);
+					// 임시 포인터 변수에 값 복사
+					for (int k = 0; k < insertNum; k++)
 					{
-						// inserCount만큼 i번째 위치에 i이전 위치에 있는 값을 옮기고
-						// i이전 위치에는 i - 2 위치에 있는 값을 옮기는 식의 반복
-						Arr[i - move] = Arr[i - (1 - move)];
-						insertCount--;
-						move++;
-						continue;
-						//Arr[i - 1] = Arr[i - 2];
-						//Arr[i - 2] = Arr[i - 3];	// 이런식으로 반복해야함
-						//// 몇개를 옮겨야할지는 inserCount와 i사이에 몇개의 배열이 존재하는지 확인
+						pTemp[k] = Arr[Idx];
+						Idx++;
 					}
-					// 반복이 끝나고 임시로 저장한 Arr[i]값을 비워진 Arr[j]위치에 넣기
-					Arr[j] = Arr[i];
+					// 값 옮기기
+					// 작은 값부터 순차적으로 옮겨야하기 때문에 삽입점인 j의 다음 위치부터 값을 복사
+					Idx = j + 1;
+					for (int k = 0; k < insertNum; k++)
+					{
+						Arr[Idx] = pTemp[k];
+						Idx++;
+					}
+					// 끝났으면 동적할당 해제
+					free(pTemp);
+					Arr[j] = temp;
 					break;
 				}
 
 				// 첫 for문 기준 j는 0에서 해당 조건이 걸리기 때문에
 				// j자리는 0
-				int temp = Arr[i];
 				Arr[i] = Arr[j];
 				Arr[j] = temp;
 				break;
 			}
-			insertCount++;
 		}
-		insertCount = 0;
+		insertNum = 0;
 	}
-
 }
 
 template<int Size>

@@ -21,6 +21,14 @@ public:
 
 	// 미리 m_Size 를 확보해둔다.
 	void resize(int _Size);
+	
+	// 입력으로 들어온 다른 배열과 내용물을 교환
+	void swap(Arr<T>& _Other);
+
+	// 동적배열끼리 대입(저장하고 있는 데이터가 같아져야 한다.)
+	Arr<T>& operator = (const Arr<T>& _Other);
+
+	
 
 	class iterator;
 	iterator begin()
@@ -36,6 +44,7 @@ public:
 
 public:
 	Arr();
+	Arr(const Arr<T>& _Other);
 	~Arr();
 
 public:
@@ -55,7 +64,7 @@ public:
 			return m_Owner->m_Data[m_Idx];
 		}
 
-		void operator++()
+		iterator& operator++()
 		{
 			assert(-1 != m_Idx);
 			
@@ -64,13 +73,31 @@ public:
 			if (m_Owner->m_Size <= m_Idx)
 			{
 				m_Idx = -1;
-			}			
+			}
+
+			return *this;
 		}
 
-		void operator++(int _Num)
+		iterator operator++(int _Num)
+		{
+			// 복사 생성자
+			iterator CopyIter(*this);
+
+			++(*this);
+
+			return CopyIter;
+		}
+
+		iterator& operator--()
+		{
+						
+		}
+
+		iterator operator--(int)
 		{
 
 		}
+
 
 	public:
 		iterator()
@@ -85,6 +112,8 @@ public:
 		{
 		}
 
+
+
 		~iterator()
 		{
 		}
@@ -97,6 +126,12 @@ Arr<T>::Arr()
 	, m_Capacity(0)
 	, m_Size(0)
 {
+}
+
+template<typename T>
+Arr<T>::Arr(const Arr<T>& _Other)
+{
+
 }
 
 template<typename T>
@@ -175,4 +210,18 @@ void Arr<T>::resize(int _Size)
 	}	
 
 	m_Size = _Size;
+}
+
+template<typename T>
+void Arr<T>::swap(Arr<T>& _Other)
+{
+
+}
+
+template<typename T>
+Arr<T>& Arr<T>::operator=(const Arr<T>& _Other)
+{
+		
+
+	return *this;
 }

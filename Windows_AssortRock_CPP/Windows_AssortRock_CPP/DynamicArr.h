@@ -21,6 +21,16 @@ public:
 	// 미리 m_Size 를 확보해둔다.
 	void resize(int _Size);
 
+	// =========
+	// TODO 1224:
+	// 입력으로 들어온 다른 배열과 내용물을 교환
+	void swap(DynamicArr<T>& _Other);
+
+	// 동적배열끼리 대입(저장하고 있는 데이터가 같아져야 한다.)
+	DynamicArr<T>& operator = (const DynamicArr<T>& _Other);
+	// =======================================
+
+
 	// ==========================================
 	// 내부 클래스 iterator에 시작 주소를 반환하는 함수
 	// 객체가 이 함수를 호출해야함
@@ -40,6 +50,11 @@ public:
 
 public:
 	DynamicArr();
+	// ==========
+	// TODO: 1224
+	// 복사 생성자
+	DynamicArr(const DynamicArr<T>& _Other);
+	// =====================================
 	~DynamicArr();
 
 // ==========
@@ -65,7 +80,7 @@ public:
 			return mOwner->m_Data[mIdx];
 		}
 		// ++ 연산자 오버로딩
-		void operator++()
+		iterator& operator++()
 		{	
 			// 예외처리
 			assert(mIdx != -1);
@@ -77,14 +92,55 @@ public:
 			{
 				mIdx = -1;	// end iterator로 만들기
 			}
+
+			return *this;
 		}
 		// 후위 ++ 연산자 오버로딩
 		// 인자로 int 하나를 받게 하면 후위 연산자 오버로딩을 하기로 약속
-		void operator++(int _Num)
+		iterator operator++(int _Num)
 		{
 			// main에서 수동호출 할때, ()에 int값을 주면 후위버전으로 호출
 			// 직접구현한다면 연산자 우선순위의 작동방식을 고려
+
+			// 복사 생성자
+			// 지역에 임시 iterator를 만들고, 호출한 자신을 복사
+			iterator copyIter(*this);
+
+			// 호출한 자기 자신을++ (복사본과는 값이 다름)
+			this->operator++();
+
+			// 복사본을 리턴하는 방식으로 후위 연산자와 동작 원리가 비슷해짐
+			return copyIter;
 		}
+
+		// ==========
+		// TODO 1224: 
+		// -- 전위, 후위 연산자 실습
+		iterator& operator--()
+		{
+			// 예외처리
+			assert(nullptr != mOwner && mIdx != -1);
+			
+			if (mIdx <= 0)
+			{
+				mIdx = -1;
+			}
+			else 
+			{
+				--mIdx;
+			}
+
+			return *this;
+		}
+
+		iterator operator--(int _Num)
+		{
+			iterator copyIter(*this);
+			this->operator--();
+
+			return *this;
+		}
+		// ===========================
 
 	public:
 		iterator() : mOwner(nullptr), mIdx(-1) {}	// mIdx가 아무것도 가리키지 않게 -1로 설정
@@ -105,6 +161,12 @@ DynamicArr<T>::DynamicArr()
 	, m_Capacity(0)
 	, m_Size(0)
 {
+}
+
+template<typename T>
+DynamicArr<T>::DynamicArr(const DynamicArr<T>& _Other)
+{
+
 }
 
 template<typename T>
@@ -183,4 +245,18 @@ void DynamicArr<T>::resize(int _Size)
 	}
 
 	m_Size = _Size;
+}
+
+template<typename T>
+void DynamicArr<T>::swap(DynamicArr<T>& _Other)
+{
+
+}
+
+template<typename T>
+DynamicArr<T>& DynamicArr<T>::operator=(const DynamicArr<T>& _Other)
+{
+
+
+	return *this;
 }

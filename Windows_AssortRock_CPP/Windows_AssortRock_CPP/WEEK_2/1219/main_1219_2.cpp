@@ -33,31 +33,31 @@ int main()
 	{
 		array2[i] = rand() % 100;
 	}
-	int array3[10];
-	for (int i = 0; i < 10; i++)
+	int array3[10000];
+	for (int i = 0; i < 10000; i++)
 	{
 		array3[i] = rand() % 100;
 	}
 
-	//// 시작 시간 측정
-	//auto start = std::chrono::high_resolution_clock::now();
-	//SelectionSort(array);
-	//// 종료 시간 측정
-	//auto stop = std::chrono::high_resolution_clock::now();
-	//// 경과 시간 계산
-	//auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
-	//std::cout << "Time taken by function: " << duration.count() << " microseconds" << std::endl;
-	//std::cout << std::endl;
+	// 시작 시간 측정
+	auto start = std::chrono::high_resolution_clock::now();
+	SelectionSort(array);
+	// 종료 시간 측정
+	auto stop = std::chrono::high_resolution_clock::now();
+	// 경과 시간 계산
+	auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
+	std::cout << "Time taken by function: " << duration.count() << " microseconds" << std::endl;
+	std::cout << std::endl;
 
-	//// 시작 시간 측정
-	//auto start2 = std::chrono::high_resolution_clock::now();
-	//Fix_BubbleSort(array2, true);
-	//// 종료 시간 측정
-	//auto stop2 = std::chrono::high_resolution_clock::now();
-	//// 경과 시간 계산
-	//auto duration2 = std::chrono::duration_cast<std::chrono::microseconds>(stop2 - start2);
-	//std::cout << "Time taken by function: " << duration2.count() << " microseconds" << std::endl;
-	//std::cout << std::endl;
+	// 시작 시간 측정
+	auto start2 = std::chrono::high_resolution_clock::now();
+	Fix_BubbleSort(array2, true);
+	// 종료 시간 측정
+	auto stop2 = std::chrono::high_resolution_clock::now();
+	// 경과 시간 계산
+	auto duration2 = std::chrono::duration_cast<std::chrono::microseconds>(stop2 - start2);
+	std::cout << "Time taken by function: " << duration2.count() << " microseconds" << std::endl;
+	std::cout << std::endl;
 
 	// 시작 시간 측정
 	auto start3 = std::chrono::high_resolution_clock::now();
