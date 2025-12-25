@@ -1,0 +1,115 @@
+# Visual Studio
+## Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+[Ww][Ii][Nn]32/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+## Visual Studio cache/options
+. vs/
+*. suo
+*.user
+*.userosscache
+*.sln. docstates
+*. userprefs
+
+## Build Results
+*_i.c
+*_p.c
+*_h.h
+*.ilk
+*. meta
+*.obj
+*.iobj
+*.pch
+*.pdb
+*.ipdb
+*.pgc
+*.pgd
+*.rsp
+*.sbr
+*.tlb
+*.tli
+*.tlh
+*.tmp
+*.tmp_proj
+*_wpftmp.csproj
+*.log
+*.tlog
+*. vspscc
+*.vssscc
+.builds
+*.pidb
+*.svclog
+*.scc
+
+## Visual Studio profiler
+*.psess
+*.vsp
+*.vspx
+*. sap
+
+## ReSharper
+_ReSharper*/
+*.[Rr]e[Ss]harper
+*.DotSettings.user
+
+## NuGet Packages
+*.nupkg
+**/[Pp]ackages/*
+! **/[Pp]ackages/build/
+
+# macOS
+. DS_Store
+.AppleDouble
+.LSOverride
+
+## Thumbnails
+._*
+
+## Files that might appear in the root of a volume
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+. TemporaryItems
+. Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+## Directories potentially created on remote AFP share
+.AppleDB
+. AppleDesktop
+Network Trash Folder
+Temporary Items
+. afiles
+
+# VS Code
+.vscode/*
+!.vscode/settings. json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+! .vscode/*.code-snippets
+
+## Local History for Visual Studio Code
+.history/
+
+## Built Visual Studio Code Extensions
+*.vsix
+
+# Common build outputs
+*. exe
+*.dll
+*.so
+*.dylib
+*.app
