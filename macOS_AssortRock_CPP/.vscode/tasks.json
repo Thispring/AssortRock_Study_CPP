@@ -4,9 +4,9 @@
 		{
 			"label": "Build C++",
 			"type": "shell",
-			"command": "g++",
+			"command": "g++-15",
 			"args": [
-				"-std=c++11",
+				"-std=c++17",
 				"-g",
 				"${fileDirname}/*.cpp",
 				"-o",
