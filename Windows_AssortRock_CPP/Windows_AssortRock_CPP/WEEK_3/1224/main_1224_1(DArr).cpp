@@ -1,7 +1,8 @@
 // C++ iterator erase와 insert
 #include <vector>
 #include <iostream>
-#include "C:\Users\141245124\Documents\GitHub\AssortRock_Study_CPP\Windows_AssortRock_CPP\Windows_AssortRock_CPP\WEEK_3\1223\DynamicArr.h"
+//#include "C:\Users\141245124\Documents\GitHub\AssortRock_Study_CPP\Windows_AssortRock_CPP\Windows_AssortRock_CPP\WEEK_3\1223\DynamicArr.h"
+#include "C:\Users\OGS\Documents\GitHub\AssortRock_Study_CPP\Windows_AssortRock_CPP\Windows_AssortRock_CPP\WEEK_3\1223\DynamicArr.h"
 
 using namespace std;
 
