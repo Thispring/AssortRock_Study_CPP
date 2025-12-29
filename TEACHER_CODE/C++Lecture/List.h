@@ -2,6 +2,10 @@
 
 #include <assert.h>
 
+// 클래스의 경우, 맴버함수를 헤더파일에 구현하면, inline 함수로 취급한다.
+// 매크로 함수와 비슷한 동작으로, 컴파일 타임에 구현한 함수를 호출없이 구현해준다.
+
+
 template<typename T>
 struct Node
 {
@@ -15,10 +19,16 @@ struct Node
 		, Prev(nullptr)
 	{}
 
-	Node(const int& _Data)
+	Node(const T& _Data)
 		: Data(_Data)
 		, Next(nullptr)
 		, Prev(nullptr)
+	{}
+
+	Node(const T& _Data, Node<T>* _Next, Node<T>* _Prev)
+		: Data(_Data)
+		, Next(_Next)
+		, Prev(_Prev)
 	{}
 };
 
@@ -44,14 +54,45 @@ public:
 
 	void reverse();
 
+	void clear()
+	{
+		Node<T>* pNode = m_Head;
+
+		while (pNode != nullptr)
+		{
+			Node<T>* pNext = pNode->Next;
+			delete pNode;
+			pNode = pNext;
+		}
+
+		m_Head = m_Tail = nullptr;
+		m_Size = 0;
+	}
+
+
 	class iterator;
 
-	iterator begin() { return iterator(this, m_Head); }
-	iterator end() { return iterator(this, nullptr); }
-	//iterator erase(const iterator& _iter);
-	//void insert(const iterator& _iter, const T& _Data);
-	//void insert(const iterator& _Where, const iterator& _Begin, const iterator& _End);
-	//<T>& operator =(const List<T>& _Other);
+	iterator begin()  { return iterator(this, m_Head); }
+	iterator end()  { return iterator(this, nullptr); }
+	iterator erase(const iterator& _iter);
+	void insert(const iterator& _iter, const T& _Data);
+	void insert(const iterator& _Where, const iterator& _Begin, const iterator& _End);
+	List<T>& operator =(const List<T>& _Other)
+	{		
+		// 보유한 데이터 모두 삭제
+		clear();
+
+		// 입력 인자로 들어온 리스트가 보유한 데이터를 새로 입력받음
+		List<T>::iterator iter = const_cast<List<T>*>(&_Other)->begin();
+		List<T>::iterator enditer = const_cast<List<T>*>(&_Other)->end();
+
+		for (; iter != enditer; ++iter)
+		{
+			push_back(*iter);
+		}
+
+		return *this;
+	}
 
 private:
 	void reverse_recursive(Node<T>* _Node);
@@ -64,13 +105,14 @@ public:
 public:
 	class iterator
 	{
+		friend class List<T>;
 	private:
 		List<T>*	m_Owner;
 		Node<T>*	m_Node;  // m_Owner 가 nullptr 가 아니고 m_Node 는 nullptr 인 경우 end iterator 이다.
 
 	public:
-		bool operator == (const iterator& _Other) { return m_Owner == _Other.m_Owner && m_Node == _Other.m_Node; }
-		bool operator != (const iterator& _Other) { return !((*this) == _Other); }
+		bool operator == (const iterator& _Other) const { return m_Owner == _Other.m_Owner && m_Node == _Other.m_Node; }
+		bool operator != (const iterator& _Other) const { return !((*this) == _Other); }
 
 		T& operator*()
 		{
@@ -132,14 +174,7 @@ List<T>::List()
 template<typename T>
 List<T>::~List()
 {
-	Node<T>* pNode = m_Head;
-
-	while (pNode != nullptr)
-	{
-		Node<T>* pNext = pNode->Next;
-		delete pNode;
-		pNode = pNext;
-	}
+	clear();
 }
 
 template<typename T>
@@ -241,6 +276,7 @@ void List<T>::reverse()
 	reverse_recursive(m_Head);
 }
 
+
 template<typename T>
 void List<T>::reverse_recursive(Node<T>* _Node)
 {
@@ -261,3 +297,101 @@ void List<T>::reverse_recursive(Node<T>* _Node)
 	}
 }
 
+template<typename T>
+typename List<T>::iterator List<T>::erase(const iterator& _iter)
+{
+	// iterator 가 정상적인지 확인
+	assert(this == _iter.m_Owner && _iter != end());
+
+	// 삭제시킬 노드의 다음 노드를 가리키는 iterator 생성
+	iterator Next(this, _iter.m_Node->Next);
+
+	// 삭제시킬 노드가 맨 처음이라면
+	if (_iter == begin())
+	{
+		// 삭제시킬 노드의 다음노드가 존재하면
+		if (_iter.m_Node->Next != nullptr)
+		{
+			// 삭제시킬 노드의 다음노드가 이전을 가리키지 않게 한다.
+			_iter.m_Node->Next->Prev = nullptr;
+			m_Head = _iter.m_Node->Next;
+		}
+
+		// 데이터가 1개밖에 없었다면
+		else
+		{
+			m_Head = m_Tail = nullptr;
+		}		
+	}	
+
+	// 마지막 데이터를 삭제 요청한 경우
+	else if (_iter.m_Node == m_Tail)
+	{
+		// 삭제시킬 노드의 이전노드가, 삭제할 노드를 가리키지 않게 한다.
+		_iter.m_Node->Prev->Next = nullptr;
+
+		// 삭제시킬 노드의 이전 노드를 새로운 Tail 노드로 지정한다.
+		m_Tail = _iter.m_Node->Prev;
+	}
+
+	// 중간에 있는 데이터를 삭제 요청한 경우
+	else
+	{
+		// 삭제할 노드를 중심으로 좌우 노드를 연결
+		_iter.m_Node->Next->Prev = _iter.m_Node->Prev;
+		_iter.m_Node->Prev->Next = _iter.m_Node->Next;
+	}
+	
+	// iterator 가 가리키는 노드 삭제
+	delete _iter.m_Node;
+
+	// 데이터 개수 카운팅
+	--m_Size;
+
+	// 삭제한 노드의 다음을 가리키는 iterator 반환
+	return Next;
+}
+
+template<typename T>
+void List<T>::insert(const iterator& _iter, const T& _Data)
+{
+	if (_iter == begin())
+	{
+		push_front(_Data);
+	}
+	else if (_iter == end())
+	{
+		push_back(_Data);
+	}
+	else
+	{
+		// insert 할 데이터를 저장하고 있는 노드를 생성시킨다.
+		Node<T>* pNewNode = new Node<T>(_Data, _iter.m_Node, nullptr);
+
+		// insert 위치의 노드의 이전노드의 다음을 새로 생성한 노드를 가리키게 한다.
+		_iter.m_Node->Prev->Next = pNewNode;
+
+		// 새로 생성한 노드가, insert 위치의 이전노드를 가리킨다.
+		pNewNode->Prev = _iter.m_Node->Prev;
+
+		// insert 위치의 노드의 이전을, 새로 생성한 노드를 가리키게 한다.
+		_iter.m_Node->Prev = pNewNode;
+
+		// 데이터 카운팅
+		++m_Size;
+	}	
+}
+
+template<typename T>
+void List<T>::insert(const iterator& _Where, const iterator& _Begin, const iterator& _End)
+{
+	// Where 는 list 본인 내부를 가리키는 iterator 여야 하고
+	// _Begin 에서 _End 까지는 같은 list 내부에서 범위를 지정했어야 한다.
+	assert(_Where.m_Owner == this && _Begin.m_Owner == _End.m_Owner);
+
+	List<T>::iterator iter = _Begin;
+	for (; iter != _End; ++iter)
+	{
+		insert(_Where, iter.m_Node->Data);		
+	}
+}

@@ -23,6 +23,8 @@ struct Node
 
 	Node() : Data(), Next(nullptr), Prev(nullptr) {}
 	Node(const T& _Data) : Data(_Data), Next(nullptr), Prev(nullptr) {}
+	// 인수를 3개 받는 생성자 구현
+	Node(const T& _Data, Node* _Next, Node* _Prev) : Data(_Data), Next(_Next), Prev(_Prev) {}
 };
 
 // ==========
@@ -101,29 +103,10 @@ public:
 	
 	// 멤버 함수
 	public:
-		// 대입연산은 비교할 List끼리 크기와 모든 요소가 같은지 비교
-		bool operator == (List& _other) 
-		{
-			// Size가 같은지 비교
-			// 만약 같지 않다면 멤버 별 비교를 할 필요가 없으므로, 바로 return 
-			if (m_Owner->m_Size != _other.m_Size)
-			{
-				return false;
-			}
+		// 대입연산은 List를 가리키는 포인터인 m_Owner가 같은 List를 가리키는지 확인, Node도 같은 걸 가리키는지 확인
+		bool operator == (const iterator& _other) { return m_Owner == _other.m_Owner && m_Node == _other.m_Node; }
 
-			// List가 가리키는 Node의 데이터들이 모두 같은지 비교
-			int temp = m_Owner->m_Size;
-			while (temp != 0)
-			{
-				// 처음엔 Head가 가리키는 Data가 같은지 비교
-				if (m_Owner->m_Head->Data != _other.m_Head->Data)
-
-				--temp;
-			}
-
-		}
-
-		bool operator != (List& _other) {}
+		bool operator != (const iterator& _other) { return m_Owner != _other.m_Owner }
 
 		T& operator*() 
 		{
@@ -329,7 +312,38 @@ void List<T>::reverse_recursive(Node<T>* _Node) {
 
 template<typename T>
 typename List<T>::iterator List<T>::erase(const iterator& _iter) {
+	// iterator 레퍼런스를 매개변수로 받아, 현재 iterator가 가리키는 컨테이너에 접근해
+	// 해당 컨테이너를 delete하고(new로 동적할당하여, 공간을 추가했기 때문) 반환값으로
+	// 지워진 iterator의 다음을 반환
 
+	// 예외처리로 매개변수 _iter가 가리키는 곳이 nullptr이거나, Data가 없는 상황에서 호출을 방지
+	// 혹은 end위치에서 호출하려고 했을 때
+	assert(_iter.m_Owner != nullptr || _iter.m_Node != -1);
+	
+	// 만약 삭제시킬 Node가 첫번째라면
+	if (_iter.m_Owner == _iter.begin())
+	{
+
+	}
+	// 만약 삭제시킬 Node가 마지막이라면
+	else if (_iter.m_Owner == _iter.end())
+	{
+
+	}
+	// 지우려는 Node 앞, 뒤로 Node가 있는 상황이라면
+	// 현재 Node의 Next가 가리키는 곳을 이전 Node가 가리키게
+	// 현재 Node의 Prev가 가리키는 곳을 다음 Node가 가리키게 바꿔주기
+	//
+	// 매개변수로 받은 iter가 가리키는 Node의 Next는 다음 Node를 가리킴
+	else
+	{
+		_iter.m_Node->Next->Prev = _iter.m_Node->Prev;
+		_iter.m_Node->Prev->Next = _iter.m_Node->Next;
+		--m_Size;
+	}
+
+
+	return iterator();
 }
 
 template<typename T>

@@ -52,22 +52,22 @@ int main()
 		myList.push_back(10);
 		myList.push_back(20);
 		myList.push_back(30);
-		List<int>::iterator myIter = myList.end();
+		List<int>::iterator myIter = myList.begin();
 		
-		--myIter;
-		int a = *myIter;
-		a = *(myIter--);
-		a = *myIter;
+		++myIter;
+		myList.erase(myIter);
+
+		int a = 0;
 	}
 
-	std::list<int> stdList;
-	stdList.push_back(10);
-	stdList.push_back(20);
-	stdList.push_back(30);
-	std::list<int>::iterator stdIter = stdList.begin();
-	int a = *stdIter;
-	stdIter = stdList.end();
-	--stdIter;
-	a = *stdIter;
+	std::list<int> mylist;
+	mylist.push_back(10);
+	mylist.push_back(20);
+	mylist.push_back(30);
+	std::list<int>::iterator stdIter = mylist.begin();
+
+	mylist.erase(stdIter);
+	int a = 0;
+
 	return 0;
 }
