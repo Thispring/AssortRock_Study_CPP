@@ -1,6 +1,7 @@
 // CPP 포커 게임
 
 #include "Card.h"
+#include "PokerCard.h"
 #include "Dealer.h"
 #include "Player.h"
 #include "PrintManager.h"
@@ -88,6 +89,7 @@ int main()
 	Card card;
 	Dealer dealer;
 	Player player;
+	PokerCard pokerCard;
 	PrintManager printM;
 
 	// main 함수에서 사용할 변수 선언부
@@ -121,6 +123,14 @@ int main()
 	printM.PrintSelectArray(isSelectHand);
 	printM.PrintSelectCardBorad(pSelectCard, selectCardIdx);
 	printM.PrintCardBorad(pHand, handIdx);
+
+	// ==================
+	// 임시 테스트 배열 선언
+	int testAry[5] = {3, 2, 5, 6, 1};
+	pSelectCard = testAry;
+
+
+	pokerCard.SortCards(pSelectCard);
 
 	while (1)
 	{

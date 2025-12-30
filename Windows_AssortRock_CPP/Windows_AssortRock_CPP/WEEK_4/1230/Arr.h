@@ -15,8 +15,18 @@ public:
 	T& GetData(int _Index);
 	T& operator[](int _Index);
 	int size() { return m_Size; }
-	T& back() { assert(m_Size > 0); return m_Data[m_Size - 1]; }
-	void pop_back() { assert(m_Size > 0);  --m_Size; }
+
+	// 가장 마지막 데이터를 반환
+	T& back() {
+		assert(m_Size > 0);
+		return m_Data[m_Size - 1];
+	}
+
+	// 사이즈를 줄이는 기능
+	void pop_back() {
+		assert(m_Size > 0);
+		--m_Size;
+	}
 
 	// 미리 m_Capacity 를 확보해둔다.
 	void reserve(int _Size);

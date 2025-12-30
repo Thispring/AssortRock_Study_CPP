@@ -14,13 +14,20 @@ private:
 	int status;
 	// Player가 카드를 선택할 때마다 증가하는 인덱스, selectCards의 오버 플로를 방지하는데 사용
 	// selectCards 탐색 인덱스는 분리해서 사용
-	int selectCount = 0;
+	int selectCount;
 	// Dealer로 부터 받은 무작위 카드를 저장하는 Player의 손패
-	int hands[HAND_LIMIT] = {};
+	int hands[HAND_LIMIT];
 	// Player가 포커를 만들기 위해 선택한 카드를 모아두는 배열
-	int selectCards[SELECT_CARD_LIMIT] = {};
+	int selectCards[SELECT_CARD_LIMIT];
 	// Player가 만든 포커 카드를 모아두는 배열
-	int pokerCards[POKER_CARD_LIMIT] = {};
+	int pokerCards[POKER_CARD_LIMIT];
+
+// 생성, 소멸자
+public:
+	Player() : status(0), selectCount(0), hands(0), selectCards(0), pokerCards(0) {}
+	~Player() {}
+
+// 멤버 함수
 public:
 	// Dealer로 부터 랜덤한 값을 받아 카드를 얻는 함수
 	// randCardNum을 얻어 hands 배열에 순차적으로 추가

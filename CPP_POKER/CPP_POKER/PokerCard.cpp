@@ -1,23 +1,14 @@
 #include "PokerCard.h"
 #include <iostream>
 
-void PokerCard::PokerCheck(int* _selectCard, bool isCheck) {
+int PokerCard::PokerCheck(int* _selectCard, bool isCheck) {
 	// 만약 main에서 isCheck가 true가 되지 않았다면
 	// 검사 조건이 불충분한데 함수가 호출된것이므로 경고 메시지 출력
 
 	if (!isCheck)
 	{
 		std::cout << "Not Poker Check Condition" << std::endl;
-		return;
-	}
-
-	// _selectCard 배열에 값이 5개가 모두 있는지 검사
-	for (int i = 0; i < SELECT_CARD_LIMIT; i++)
-	{
-		if (_selectCard[i] == 0)
-		{
-			return;
-		}
+		return 1;
 	}
 
 	// 족보 검사 로직
@@ -28,7 +19,11 @@ void PokerCard::PokerCheck(int* _selectCard, bool isCheck) {
 		tempNumCards[i] = _selectCard[i];
 	}
 
-	int sameNumberCount = 0;
+	// 같은 숫자가 몇개 있는지 카운팅하는 변수
+	// 표현 숫자가 0부터 5까지만 필요하므로, unsigned char 사용
+	// _2는 FullHouse 조건문에 사용
+	unsigned char sameNumCount_1 = 0;
+	unsigned char sameNumCount_2 = 0;
 
 	// 가장 높은 족보부터 조건문 우선 검사
 	// HIGH_CARD 조건
@@ -63,25 +58,51 @@ void PokerCard::PokerCheck(int* _selectCard, bool isCheck) {
 	{
 		// 현재 카드와 다음 순서에 있는 카드의 숫자가 같은지 판별
 		if (i != 4 && tempNumCards[i] == tempNumCards[i + 1])
-			sameNumberCount++;
+			sameNumCount_1++;
 	}
 
+	// 같은 카드숫자가 얼마나 있는지 판별하고, 조건문을 통해 알맞은 값을 반환
 	// 만약 같은 숫자 카드가 없다면, 해당 족보는 HIGH_CARD
-	if (sameNumberCount == 4)
-		std::cout << "FOUR_OF_A_KIND" << std::endl;
-	else if (sameNumberCount == 3)
-		std::cout << "THREE_OF_A_KIND" << std::endl;
-	else if (sameNumberCount == 2)
-		std::cout << "TWO_PAIRS" << std::endl;
-	else if (sameNumberCount == 1)
-		std::cout << "ONE_PAIR" << std::endl;
-	else if (sameNumberCount == 0)
-		std::cout << "HIGH_CARD" << std::endl;
 
+	//	HIGH_CARD(0~) , ONE_PAIR , TWO_PAIRS , THREE_OF_A_KIND ,
+	//	STRAIGHT , FLUSH , FULL_HOUSE , FOUR_OF_A_KIND , STRAIGHT_FLUSH(~8) 
+	//  (괄호 안 숫자는 정수 값, 오른쪽으로 갈수록 +1 증가)
+
+	if (sameNumCount_1 == 4)
+		return 4;
+	else if (sameNumCount_1 == 3)
+		return 3;
+	else if (sameNumCount_1 == 2)
+		return 2;
+	else if (sameNumCount_1 == 1)
+		return 1;
+	else if (sameNumCount_1 == 0)
+		return 0;
+
+	return 100;
 }
 
-// enum으로 설정된 HandRank를 반환
-int PokerCard::ReturnRank()
-{
-	return HandRank();
+void PokerCard::SortCards(int* _sCard) {
+	// selectCard를 받아, 값을 오름차순으로 정렬
+	
+	int min = _sCard[0];
+	int Idx = 0;
+	for (int i = 0; i < SELECT_CARD_LIMIT; i++)
+	{
+		min = _sCard[i];
+		for (int j = 0 + i; j < SELECT_CARD_LIMIT; j++)
+		{
+			if (j >= SELECT_CARD_LIMIT)
+				break;
+
+			if (min > _sCard[j])
+				min = _sCard[j];
+
+			Idx = j;
+		}
+		int temp = _sCard[i];
+		_sCard[i] = min;
+		_sCard[Idx] = temp;
+		Idx = 0;
+	}
 }
