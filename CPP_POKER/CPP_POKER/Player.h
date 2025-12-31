@@ -2,9 +2,10 @@
 // 멤버 함수로는 카드를 받아오는 함수와, 배열의 인덱스를 탐색하는 함수, 카드를 고르고 포커 카드로 만드는 함수를 작성합니다.
 #pragma once
 
-#define HAND_LIMIT 9			// Player의 손패는 9장으로 제한합니다.
-#define SELECT_CARD_LIMIT 5		// 포커 족보를 만들기 위해 선택한 카드는 5장으로 제한합니다. (현실 포커 족보를 따름)
-#define POKER_CARD_LIMIT 3		// Poker 카드는 3장으로 제한합니다.
+// 사용자 정의 헤더
+#include "GameManager.h"
+// 표준 헤더
+#include <map>
 
 // TODO(12/17): public, protected 멤버 변수 private로 변경하고, 접근가능한 멤버 함수 구현하기
 // -> Player 클래스를 상속하여 자식클래스를 만들게되면 멤버 변수 protected로 변경
@@ -16,15 +17,20 @@ private:
 	// selectCards 탐색 인덱스는 분리해서 사용
 	int selectCount;
 	// Dealer로 부터 받은 무작위 카드를 저장하는 Player의 손패
-	int hands[HAND_LIMIT];
+	// map 자료구조로 변경
+	std::map<int, int> hands;
+
+	// Dealer로 부터 받은 무작위 카드를 저장하는 Player의 손패
+	//int hands[HAND_LIMIT];
 	// Player가 포커를 만들기 위해 선택한 카드를 모아두는 배열
 	int selectCards[SELECT_CARD_LIMIT];
 	// Player가 만든 포커 카드를 모아두는 배열
-	int pokerCards[POKER_CARD_LIMIT];
+	HAND_RANK pokerCards[POKER_CARD_LIMIT];
 
 // 생성, 소멸자
 public:
-	Player() : status(0), selectCount(0), hands(0), selectCards(0), pokerCards(0) {}
+	Player() : status(0), selectCount(0), //hands(0),
+		selectCards(0), pokerCards(NONE) {}
 	~Player() {}
 
 // 멤버 함수
@@ -38,6 +44,9 @@ public:
 
 	// selectCards의 시작주소를 리턴하여 접근하게 하는 함수
 	int* GetselectCards();
+
+	// pokerCards의 시작주소를 리턴하여 접근하게 하는 함수
+	HAND_RANK* GetPokerCards();
 
 	// Player의 손패에 있는 Card 데이터의 정수 값을 출력하는 함수(테스트용)
 	// Card는 Dealer가 반환한 두 무작위 숫자의 곱으로 이루어져있음
@@ -66,7 +75,4 @@ public:
 	// 선택된 카드를 다시 hands에 돌려놓는 함수
 	// PickCard와 옮기는 규칙(=옮겨진 배열에 0대입) 동일
 	void ReturnSelectCard(int curIndex);
-
-	// selectCards를 읽어와, 알맞은 포커족보를 반환하는 함수
-	void PokerChecker(bool isCheck);
 };

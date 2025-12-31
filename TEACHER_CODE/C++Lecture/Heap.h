@@ -28,6 +28,15 @@ public:
 
 	void SetMode(HEAP_MODE _Mode);
 
+private:
+	bool Compare(int _ParentIdx, int _ChildIdx)
+	{
+		if (HEAP_MODE::MIN == m_Mode)
+			return Arr<T>::GetData(_ParentIdx) < Arr<T>::GetData(_ChildIdx);
+		else 
+			return Arr<T>::GetData(_ParentIdx) > Arr<T>::GetData(_ChildIdx);
+	}
+
 
 public:
 	Heap()
@@ -48,8 +57,8 @@ void Heap<T>::push(const T& _Data)
 	// 최근에 추가한 데이터를 부모와 비교해서 올린다.
 	int CurIdx = Arr<T>::size() - 1;
 
-	// 루트 노드가 아니고, 
-	while (CurIdx != 0 && Arr<T>::GetData(CurIdx) < Arr<T>::GetData((CurIdx - 1) / 2))
+	// 루트 노드가 아니고, 부모와 자식 관계가 올바른 상황이 아니라면
+	while (CurIdx != 0 && !Compare((CurIdx - 1) / 2, CurIdx))
 	{
 		// 부모 노드와 현재노드의 값을 교환한다.
 		int Temp = Arr<T>::GetData(CurIdx);
@@ -80,7 +89,7 @@ T Heap<T>::Get()
 	int CurIdx = 0;
 	while (true)
 	{
-		// 왼쪽, 오른쪽 자식 인덱스, 둘중 더 작은 자식의 인덱스를 찾아야 한다.
+		// 왼쪽, 오른쪽 자식 인덱스, 둘중 더 올바른 자식을 찾아야 한다.
 		int LeftChild = CurIdx * 2 + 1;
 		int RightChild = CurIdx * 2 + 2;
 		int MinIdx = 0;
@@ -92,11 +101,11 @@ T Heap<T>::Get()
 		// 오른쪽 자식이 없으면, 두 자식중 왼쪽 자식이랑 비교한다.
 		if (Arr<T>::size() <= RightChild)
 			MinIdx = LeftChild;
-		else
-			Arr<T>::GetData(LeftChild) < Arr<T>::GetData(RightChild) ? MinIdx = LeftChild : MinIdx = RightChild;
+		else // 자식이 둘다 있으면, 둘을 비교해서 더 맞는 자식을 찾는다.
+			Compare(LeftChild, RightChild) ? MinIdx = LeftChild : MinIdx = RightChild;
 
-		// 두 자식중, 더 작은 값과, 현재 노드 값을 비교해서, 자식이 더 크면, 내려갈 필요가 없다.
-		if (Arr<T>::GetData(CurIdx) < Arr<T>::GetData(MinIdx))
+		// 두 자식중, 더 알맞은 노드랑 비교했는데 트리 구조에 위배되지 않는다면
+		if (Compare(CurIdx, MinIdx))
 			break;
 
 		T Temp = Arr<T>::GetData(CurIdx);
@@ -114,5 +123,34 @@ T Heap<T>::Get()
 template<typename T>
 void Heap<T>::SetMode(HEAP_MODE _Mode)
 {
+	// 이미 동일한 모드인 경우 무시
+	if (m_Mode == _Mode)
+		return;
 
+	// 데이터 개수가 1개밖에 없으면, 재 구성할 필요 없음
+	if (Arr<T>::size() <= 1)
+	{
+		m_Mode = _Mode;
+		return;
+	}
+
+	// 힙이 보유한 데이터가 2개 이상이라면, 변경된 모드로 다시 구성해야 한다.
+	// 임시 지역 배열을 만들어서 Heap 이 보유한 데이터를 전부 꺼내서 배열에 넣는다.
+	Arr<T> arrTemp;
+	arrTemp.reserve(Arr<T>::size());
+
+	int size = Arr<T>::size();
+	for (int i = 0; i < size; ++i)
+	{
+		arrTemp.push_back(Get());
+	}
+
+	// 힙 모드를 변경한다.
+	m_Mode = _Mode;
+	
+	// 꺼낸 데이터를 역순으로 heap 에 다시 넣어서, 최대한 재 구성할때 연산이 덜 발생하게 한다.
+	for (int i = 0; i < size; ++i)
+	{
+		push(arrTemp[size - (i+1)]);
+	}	
 }

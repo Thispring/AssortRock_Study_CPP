@@ -1,6 +1,8 @@
 #pragma once
 // 게임의 출력을 담당하는 프로그램
 
+// 사용자 정의 헤더
+#include "GameManager.h"
 // 표준 헤더
 #include <iostream>
 #include <string>

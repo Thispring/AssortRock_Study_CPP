@@ -37,8 +37,16 @@ enum PLAYER_STATE
 	DEAD,	
 };
 
+enum OTHER_TYPE
+{
+	HIT,
+
+};
+
 #define MYTYPE_1  0
 #define MYTYPE_2  1
+
+#define MYTYPE_1 10
 
 
 using namespace std;
@@ -49,7 +57,7 @@ int main()
 
 	PLAYER_STATE state = HEART;
 	state = ATTACK;
-	a = ATTACK;
+	a = HIT;
 
 
 

@@ -14,6 +14,12 @@
 // -> 작동방식 확인 필요
 #include <windows.h>
 
+// 전역으로 선언한 배열, enum 번호 순대로 인덱스를 알맞은 문자열로 초기화
+const char* HAND_RANK_STRINGS[] = {
+	"NONE", "HIGH_CARD", "ONE_PAIR", "TWO_PAIRS", "THREE_OF_A_KIND",
+	"STRAIGHT", "FLUSH", "FULL_HOUSE", "FOUR_OF_A_KIND", "STRAIGHT_FLUSH"
+};
+
 // windows API를 이용한 입력버퍼에 있는 문자를 읽어오는 함수
 int getstdin()
 {
@@ -98,6 +104,8 @@ int main()
 	int* pHand = player.GetHands();
 	// Player의 selectCards 멤버 변수에 접근할 포인터 변수 pSelectCard선언
 	int* pSelectCard = player.GetselectCards();
+	// Player의 pokerCards 멤버 변수에 접근할 포인터 변수 pPokerCard선언
+	HAND_RANK* pPokerCard = player.GetPokerCards();
 
 	// 터미널 비우기 여부
 	// 무한반복문에 이전 출력 내용을 지우고, 현재 출력내용만 남게 하기
@@ -124,13 +132,19 @@ int main()
 	printM.PrintSelectCardBorad(pSelectCard, selectCardIdx);
 	printM.PrintCardBorad(pHand, handIdx);
 
-	// ==================
-	// 임시 테스트 배열 선언
-	int testAry[5] = {3, 2, 5, 6, 1};
-	pSelectCard = testAry;
+	// =====================
+	//// 정렬기능 테스트 배열 선언
+	//int testAry[5] = {};
+	//for (int i = 0; i < 5; i++)
+	//{
+	//	testAry[i] = dealer.RandomNumber() * dealer.RandomShape();
+	//}
+	//pSelectCard = testAry;
 
-
-	pokerCard.SortCards(pSelectCard);
+	//pokerCard.SortCards(pSelectCard);
+	//// 카드 정렬 후, pPokerCard[0]배열에 값을 리턴
+	//pPokerCard[0] = pokerCard.PokerCheck(pSelectCard, true);
+	// =====================
 
 	while (1)
 	{
@@ -154,6 +168,24 @@ int main()
 		// 숫자를 논리값으로 해석하여, 0이아닌 모든 숫자는 참으로 계산
 		// 고로 switch에서 2개이상의 숫자에 같은 조건을 넣고싶으면, 중첩하여 표현하기
 
+		// P, p
+		// 포커카드를 만드는 로직
+		case 80:
+		case 112:
+			system("cls");
+			std::cout << "Input: P" << std::endl;
+			std::cout << "Poker is: " << pPokerCard[0] << std::endl;
+
+			pPokerCard[0] = pokerCard.PokerCheck(pSelectCard, true);
+
+			std::cout << "Poker is: " << HAND_RANK_STRINGS[pPokerCard[0]] << std::endl;
+
+			// 위 로직이 끝난 후 Print
+			printM.PrintTitle();
+			printM.PrintSelectArray(isSelectHand);
+			printM.PrintSelectCardBorad(pSelectCard, selectCardIdx);
+			printM.PrintCardBorad(pHand, handIdx);
+			break;
 		// W, w
 		// W키는 현재 handIdx 값에 맞는 카드를 hands에서 가져와 selectCards에 순차적으로 배치
 		// 선입후출 방식으로 카드를 선택하고 제외 시키기

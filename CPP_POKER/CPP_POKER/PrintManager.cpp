@@ -1,6 +1,5 @@
 // 사용자 정의 헤더
 #include "Card.h"
-#include "Player.h"
 #include "PrintManager.h"
 // 표준 헤더
 #include <iostream>
@@ -83,39 +82,46 @@ void PrintManager::PrintCardBorad(int* pHand, int pointerColor) {
 		else
 			std::cout << Color::RESET;
 
-		// ShapeNames은 0부터 3까지 4개
-		// NumberNames은 0부터 13까지 13개
-		int cardType = pHand[i];
+		// pHand의 i번째 인덱스 번호를 추출해, 조건문으로 알맞은 카드를 콘솔에 출력
+		int cardNum = classifyCardInfo(pHand, i, NUMBER);
+		int cardShape = classifyCardInfo(pHand, i, SHAPE);
 
 		// Card 클래스에 cardType 정수 변수를 인자로 받고
 		// char 문자열을 반환하는 함수 만들기
-		const char* cardName = card.GetCardNumberName(cardType);
+		const char* cardName = card.GetCardNumberName(cardNum);
 
 		// cardType이 0일때(카드를 선택하면 cardType 값이 0으로 변경) 반복 검사 생략
-		if (cardType == 0) 
+		if (cardNum == 0 || cardShape == 0)
 		{
 			std::cout << " [       ] ";
 			continue;
 		}
 
-		if (1 <= cardType && 13 >= cardType)
+		switch (cardShape)
+		{
+		case 1:
 			std::cout << "[" << CLUB << " " << cardName << "] ";
-		else if (2 <= cardType && 26 >= cardType)
+			break;
+		case 2:
 			std::cout << "[" << DIA << " " << cardName << "] ";
-		else if (3 <= cardType && 39 >= cardType)
+			break;
+		case 3:
 			std::cout << "[" << HEART << " " << cardName << "] ";
-		else if (4 <= cardType && 52 >= cardType)
+			break;
+		case 4:
+			break;
 			std::cout << "[" << SPADE << " " << cardName << "] ";
-		else
-			std::cout << " [       ] ";
-
-	}
+		default:
+			std::cout << "ERROR" << std::endl;
+			break;
+		}
 
 	// 마지막 인덱스 숫자에서 컬러 강제 초기화
 	// 8 -> 0으로 넘어갈때 그 다음 print 색상이 변경됨
 	if (pointerColor >= HAND_LIMIT-1)
 		std::cout << Color::RESET;
 	std::cout << std::endl;
+	}
 }
 
 // Player의 선택한 카드들을 출력하는 함수
@@ -146,26 +152,30 @@ void PrintManager::PrintSelectCardBorad(int* pSelectCard, int pointerColor) {
 			std::cout << " [       ] ";
 		else
 		{
-			int cardType = pSelectCard[i];
-			const char* cardName = card.GetCardNumberName(cardType);
+			// pHand의 i번째 인덱스 번호를 추출해, 조건문으로 알맞은 카드를 콘솔에 출력
+			int cardNum = classifyCardInfo(pSelectCard, i, NUMBER);
+			int cardShape = classifyCardInfo(pSelectCard, i, SHAPE);
 
-			// cardType이 0일때(카드를 선택하면 cardType 값이 0으로 변경) 반복 검사 생략
-			if (cardType == 0)
+			const char* cardName = card.GetCardNumberName(cardNum);
+
+			switch (cardShape)
 			{
-				std::cout << " [       ] ";
-				continue;
-			}
-
-			if (1 <= cardType && 13 >= cardType)
+			case 1:
 				std::cout << "[" << CLUB << " " << cardName << "] ";
-			else if (2 <= cardType && 26 >= cardType)
+				break;
+			case 2:
 				std::cout << "[" << DIA << " " << cardName << "] ";
-			else if (3 <= cardType && 39 >= cardType)
+				break;
+			case 3:
 				std::cout << "[" << HEART << " " << cardName << "] ";
-			else if (4 <= cardType && 52 >= cardType)
+				break;
+			case 4:
+				break;
 				std::cout << "[" << SPADE << " " << cardName << "] ";
-			else
-				std::cout << " [       ] ";
+			default:
+				std::cout << "ERROR" << std::endl;
+				break;
+			}
 		}
 	}
 	if (pointerColor >= SELECT_CARD_LIMIT - 1)
