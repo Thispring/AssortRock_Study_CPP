@@ -1,0 +1,7 @@
+<Solution>
+  <Configurations>
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="CPP_POKER_v2/CPP_POKER_v2.vcxproj" />
+</Solution>

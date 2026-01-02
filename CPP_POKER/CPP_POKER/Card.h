@@ -1,10 +1,10 @@
-﻿// Card의 역할은 숫자를 받아와서 어떤 포커카드인지 정보를 넘겨주고
-// Player가 뽑은 5개의 포커카드를 통해 어떤 족보인지 정보를 넘겨주는 역할입니다.
+﻿// Card 객체는 각자 고유의 문양과 번호를 부여받습니다. (중복없이)
+// 현실의 플레잉카드 52장을 참고해 구현합니다.
 
 #pragma once
 #include "GameManager.h"
 
-class Card : public Dealer
+class Card
 {
 private:
 	// 어떤 문양과 번호를 가지고 있는지 저장
